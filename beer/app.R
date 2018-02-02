@@ -293,29 +293,29 @@ shinyApp(
       
     
     
-    # .output$byCategory ----
-    # ~~~~~~~~
-    output$byCategory =
-      renderPlot({
-        
-        summaryData %>%
-        select(.,
-               Beer,
-               input$selectCategory
-               ) %>%
-        group_by(.,
-                 Beer
-                 ) %>%
-        summary(.,
-                Average = mean(input$selectCategory)
-                ) %>%
-        ggplot(., aes(x = input$selectCategory, y = Score)) +
-          geom_bar(stat = "identity") +
-          ylim(0, 5) +
-          theme_minimal() +
-          ggtitle("Beers by ", input$selectCategory)
-        
-      })
+    # # .output$byCategory ----
+    # # ~~~~~~~~
+    # output$byCategory =
+    #   renderPlot({
+    #     
+    #     summaryData %>%
+    #     select(.,
+    #            Beer,
+    #            input$selectCategory
+    #            ) %>%
+    #     group_by(.,
+    #              Beer
+    #              ) %>%
+    #     summary(.,
+    #             Average = mean(input$selectCategory)
+    #             ) %>%
+    #     ggplot(., aes(x = input$selectCategory, y = Score)) +
+    #       geom_bar(stat = "identity") +
+    #       ylim(0, 5) +
+    #       theme_minimal() +
+    #       ggtitle("Beers by ", input$selectCategory)
+    #     
+    #   })
     # ~~~~~~~~
     
   }
