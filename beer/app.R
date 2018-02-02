@@ -1,31 +1,40 @@
 # load libraries
 library(shiny)
+library(ggplot2)
+library(tidyverse)
 
 
 # which fields are mandatory
 fieldsMandatory = 
-  c("userName",
-    "beerName",
-    "scoreHoppiness",
-    "scoreBody",
-    "scoreBalance",
-    "scoreComplexity",
-    "scoreCrispiness",
-    "scoreHipsterness"
+  c("Name",
+    "Beer",
+    "Hoppiness",
+    "Body",
+    "Balance",
+    "Complexity",
+    "Crispiness",
+    "Hipsterness"
   )
 
 # collate all field names to be exported
 fieldsAll = 
-  c("userName",
-    "beerName",
-    "scoreHoppiness",
-    "scoreBody",
-    "scoreBalance",
-    "scoreComplexity",
-    "scoreCrispiness",
-    "scoreHipsterness",
-    "userComment"
+  c("Name",
+    "Beer",
+    "Hoppiness",
+    "Body",
+    "Balance",
+    "Complexity",
+    "Crispiness",
+    "Hipsterness",
+    "Comment"
     )
+
+# create list of available beers
+beerList = c("Harper's: Golden Crown Ale", "O'Shea's: Spiced Winter Ale", "O'Hara's: Notorius IPA",
+             "St. Mel's: Autumn IPA", "Station Works: Foxes Rock Pale Ale", "Guinness Open: Gate Irish Wheat")
+
+# create list of available categories
+categoryList = c("Hoppiness", "Body", "Balance", "Complexity", "Crispiness", "Hipsterness")
 
 # add an asterisk to an input label
 labelMandatory <- function(label) {
@@ -64,8 +73,8 @@ saveData <- function(data) {
 loadData <- function() {
   files <- list.files(file.path(responsesDir), full.names = TRUE)
   data <- lapply(files, read.csv, stringsAsFactors = FALSE)
-  #data <- dplyr::rbind_all(data)
-  data <- do.call(rbind, data)
+  data <- dplyr::bind_rows(data)
+  #data <- do.call(rbind, data)
   data
 }
 
@@ -103,6 +112,7 @@ shinyApp(
     # title
     titlePanel("The Beer RateR"),
     
+    
     div(id = "header",
         h4("This app is powered by ",
            a(href = "https://shiny.rstudio.com",
@@ -117,59 +127,65 @@ shinyApp(
           span("Code on "),
           a("GitHub", href = "https://github.com/jknappe/shiny-server/")
           )
-    ),
+     ),
     
-    DT::dataTableOutput("responsesTable"),
+    #DT::dataTableOutput("responsesTable"),
     
+    # fluid row, columns should add to 12
     fluidRow(
-      column(6,
+      
+      # first column
+      column(4,
              div(
                id = "form",
                
-               textInput("userName", "Your Name", ""),
-               selectInput("beerName", "Which beer are you rating?",
-                           c("", "Harper's: Golden Crown Ale", "O'Shea's: Spiced Winter Ale", "O'Hara's: Notorius IPA",
-                             "St. Mel's: Autumn IPA", "Station Works: Foxes Rock Pale Ale", "Guinness Open: Gate Irish Wheat")
-               ),
-               sliderInput(inputId = "scoreHoppiness", 
-                           label = "Hoppiness", 
+               h4("Submit a new rating:"),
+               # Input fields
+               textInput("Name", "Your Name", ""),
+               selectInput("Beer", "Which beer are you rating?",
+                           c("", beerList)),
+               sliderInput(inputId = "Hoppiness", label = "Hoppiness", 
                            min = 0, max = 5, value = 0, step = 0.5, ticks = FALSE),
-               sliderInput(inputId = "scoreBody", 
-                           label = "Body", 
+               sliderInput(inputId = "Body", label = "Body", 
                            min = 0, max = 5, value = 0, step = 0.5, ticks = FALSE),
-               sliderInput(inputId = "scoreBalance", 
-                           label = "Balance", 
+               sliderInput(inputId = "Balance", label = "Balance", 
                            min = 0, max = 5, value = 0, step = 0.5, ticks = FALSE),
-               sliderInput(inputId = "scoreComplexity", 
-                           label = "Complexity", 
+               sliderInput(inputId = "Complexity", label = "Complexity", 
                            min = 0,  max = 5, value = 0, step = 0.5, ticks = FALSE),
-               sliderInput(inputId = "scoreCrispiness", 
-                           label = "Crispiness", 
+               sliderInput(inputId = "Crispiness", label = "Crispiness", 
                            min = 0, max = 5, value = 0, step = 0.5, ticks = FALSE),
-               sliderInput(inputId = "scoreHipsterness", 
-                           label = "Overall Hipsterness", 
+               sliderInput(inputId = "Hipsterness", label = "Overall Hipsterness", 
                            min = 0, max = 5, value = 0, step = 0.5, ticks = FALSE),
-               textInput("userComment", "General Comment"),
+               textInput("Comment", "General Comment"),
                actionButton("submit", "Submit Scoring", class = "btn-primary"),
                
-               shinyjs::hidden(
-                 span(id = "submit_msg", "Submitting..."),
-                 div(id = "error",
-                     div(br(), tags$b("Error: "), span(id = "error_msg"))
-                 )
-               )
-             ),
+               shinyjs::hidden(span(id = "submit_msg", "Submitting..."),
+                               div(id = "error", div(br(), tags$b("Error: "), span(id = "error_msg"))))
+              ),
              
-             shinyjs::hidden(
-               div(
-                 id = "thankyou_msg",
-                 h3("Thanks, your response was submitted successfully!"),
-                 actionLink("submit_another", "Submit another response")
-               )
+            shinyjs::hidden(div(id = "thankyou_msg", h3("Thanks, your response was submitted successfully!"),
+                            actionLink("submit_another", "Submit another response")))
+      ),
+      
+      # second column
+      column(8,
+             h4("Browse the results:"),
+             tabsetPanel(
+               tabPanel("by beer",
+                        selectInput(inputId = "selectBeer", label = "Select beer", choices = beerList), 
+                        plotOutput("byBeer")
+                        ), 
+               tabPanel("by category",
+                        selectInput(inputId = "selectCategory", label = "Select category", choices = categoryList),  
+                        plotOutput("byCategory")), 
+               tabPanel("Comments", tableOutput("comments"))
              )
       )
-    )
-  ),
+      
+      
+      
+    ) # close fluidRow
+  ), # close fluidPage
   
   # SERVER
   # ~~~~~~~~
@@ -234,8 +250,73 @@ shinyApp(
       options = list(searching = FALSE, lengthChange = FALSE)
     ) 
     
+    # PLOTS ----
+    #~~~~~~~~~~~
+
+    # .summary ----
+    summaryData =
+      loadData() %>%
+      mutate(.,
+             Beer = factor(Beer),
+             Hoppiness = as.numeric(Hoppiness),
+             Body = as.numeric(Body),
+             Balance = as.numeric(Balance),
+             Complexity = as.numeric(Complexity),
+             Crispiness = as.numeric(Crispiness),
+             Hipsterness = as.numeric(Hipsterness),
+             Comment = as.character(Comment)
+             )  %>%
+      as_tibble()
+    
+    # .output$byBeer ----
+    # ~~~~~~~~
+    output$byBeer =
+      renderPlot({
+        
+        summaryData %>%
+        gather(.,
+               key = "Category",
+               value = "Score",
+               Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
+        ) %>%
+        filter(.,
+               Beer %in% input$selectBeer
+               ) %>%
+        ggplot(., aes(x = Category, y = Score)) +
+          geom_boxplot() +
+          ylim(0, 5) +
+          theme_minimal() +
+          ggtitle("Average scores for ", input$selectBeer)
+        
+      })
+    # ~~~~~~~~
+      
     
     
-       
+    # .output$byCategory ----
+    # ~~~~~~~~
+    output$byCategory =
+      renderPlot({
+        
+        summaryData %>%
+        select(.,
+               Beer,
+               input$selectCategory
+               ) %>%
+        group_by(.,
+                 Beer
+                 ) %>%
+        summary(.,
+                Average = mean(input$selectCategory)
+                ) %>%
+        ggplot(., aes(x = input$selectCategory, y = Score)) +
+          geom_bar(stat = "identity") +
+          ylim(0, 5) +
+          theme_minimal() +
+          ggtitle("Beers by ", input$selectCategory)
+        
+      })
+    # ~~~~~~~~
+    
   }
 )
