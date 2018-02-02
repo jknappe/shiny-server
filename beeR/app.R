@@ -46,6 +46,10 @@ humanTime <- function() {
   format(Sys.time(), "%Y%m%d-%H%M%OS")
 }
 
+
+# directory where responses get stored
+responsesDir <- file.path("./responses/")
+
 # save the results to a file
 saveData <- function(data) {
   fileName <- sprintf("%s_%s.csv",
@@ -64,9 +68,6 @@ loadData <- function() {
   data <- do.call(rbind, data)
   data
 }
-
-# directory where responses get stored
-responsesDir <- file.path("responses")
 
 # CSS to use in the app
 appCSS <-
