@@ -57,6 +57,12 @@ loadData = function() {
   gs_read_csv(sheet)
 }
 
+# get list of all beers
+beerList = loadData() %>%
+  select(Beer) %>%
+  mutate(Beer = factor(Beer))
+beerList = levels(beerList$Beer)
+
 
 # start shiny app
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,12 +128,14 @@ shinyApp(
              tabsetPanel(
                tabPanel("by type",
                         selectInput(inputId = "selectType", label = "Select type", choices = typeList), 
-                        plotOutput("byType")
-               ), 
+                        plotOutput("byType")), 
                tabPanel("by category",
                         selectInput(inputId = "selectCategory", label = "Select category", choices = categoryList),  
                         plotOutput("byCategory")), 
-               tabPanel("Comments", tableOutput("comments"))
+               tabPanel("by beer",
+                        selectInput(inputId = "selectBeer", label = "Select beer", choices = beerList),  
+                        plotOutput("byBeer"),
+                        tableOutput("table"))
              )
       )
       
@@ -206,30 +214,74 @@ shinyApp(
     # .summary ----
     
     
-    # .output$byBeer ----
+    # .output$byType ----
     # ~~~~~~~~
-     output$byBeer =  renderPlot( {
-        ggplot(as_tibble(mutate(loadData(), Beer = factor(Beer))), aes(x = Beer, y = Hoppiness)) +
-          geom_bar(stat = "identity")
-         # summaryData %>%
-         #   tidyr::gather(.,
-         #        key = "Category",
-         #        value = "Score",
-         #        Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
-         # ) %>%
-         # dplyr::filter(.,
-         #        Beer %in% input$selectBeer
-         #        ) %>%
-         # ggplot(., aes(x = Category, y = Score)) +
-         #   geom_boxplot() +
-         #   ylim(0, 5) +
-         #   theme_minimal() +
-         #   ggtitle("Average scores for ", input$selectBeer)
+     output$byType =  renderPlot( {
+       
+       loadData() %>%
+         as.tibble() %>%
+         mutate(Type = factor(Type), Beer = factor(Beer), Name = factor(Name)) %>%
+         gather(key = "Category",
+                value = "Score",
+                -Name,
+                -Beer,
+                -Type,
+                -Comment) %>%
+        filter(!is.na(Type)) %>%
+        filter(Type %in% input$selectType) %>%
+        ggplot(aes(x = Category, y = Score)) +
+          geom_boxplot()
+         
         } 
        )
     # ~~~~~~~~
     
+    # .output$byCategory ----
+    # ~~~~~~~~
+    output$byCategory =  renderPlot( {
+      
+      loadData() %>%
+        as.tibble() %>%
+        mutate(Type = factor(Type), Beer = factor(Beer), Name = factor(Name)) %>%
+        gather(key = "Category",
+               value = "Score",
+               -Name,
+               -Beer,
+               -Type,
+               -Comment) %>%
+        filter(!is.na(Type)) %>%
+        filter(Category %in% input$selectCategory) %>%
+        ggplot(aes(x = Type, y = Score)) +
+        geom_boxplot()
+      
+    } 
+    )
+    # ~~~~~~~~
     
+    # table output
+    output$table = renderTable(loadData() %>% filter(Beer %in% input$selectBeer))
+    
+    # .output$byBeer ----
+    # ~~~~~~~~
+    output$byBeer =  renderPlot( {
+      
+      loadData() %>%
+        as.tibble() %>%
+        mutate(Type = factor(Type), Beer = factor(Beer), Name = factor(Name)) %>%
+        gather(key = "Category",
+               value = "Score",
+               -Name,
+               -Beer,
+               -Type,
+               -Comment) %>%
+        filter(!is.na(Type)) %>%
+        filter(Beer %in% input$selectBeer) %>%
+        ggplot(aes(x = Category, y = Score)) +
+        geom_boxplot()
+      
+    } 
+    )
+    # ~~~~~~~~
     
     # # .output$byCategory ----
     # # ~~~~~~~~
