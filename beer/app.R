@@ -3,6 +3,9 @@ library(shiny)
 library(ggplot2)
 library(tidyverse)
 library(magrittr)
+library(googlesheets)
+
+options(shiny.sanitize.errors = FALSE)
 
 
 # create list of available categories
@@ -15,26 +18,43 @@ fieldsMandatory = c("Name", "Beer", categoryList)
 fieldsAll = c(fieldsMandatory, "Comment")
 
 # create list of available beers
-beerList = c("Harper's: Golden Crown Ale", "O'Shea's: Spiced Winter Ale", "O'Hara's: Notorius IPA",
-             "St. Mel's: Autumn IPA", "Station Works: Foxes Rock Pale Ale", "Guinness Open: Gate Irish Wheat")
+typeList = c("Ale", "IPA", "Lager/Pilsner", "Stout/Porter", "Wheat", "Malt", "Other")
 
 # create list of available categories
 categoryList = c("Hoppiness", "Body", "Balance", "Complexity", "Crispiness", "Hipsterness")
 
 
-# save the results to a file
+# # save the results to a file
+# saveData = function(data) {
+#   fileName = file.path("responses", sprintf("%s_%s.csv", as.integer(Sys.time()), digest::digest(data)))
+#   write.csv(x = data, file = fileName, row.names = FALSE)
+# }
+# 
+# # load all responses into a data.frame
+# loadData = function() {
+#   data = 
+#     list.files(file.path("responses"), full.names = TRUE) %>%
+#     lapply(function(x) read_csv(x, col_names = TRUE, col_types = cols(.default = col_guess())) ) %>%
+#     bind_rows(.) 
+#   data
+# }
+
+# GOOGLESHEETS
+
+table = "beer"
+
 saveData = function(data) {
-  fileName = sprintf("%s_%s.csv", as.integer(Sys.time()), digest::digest(data))
-  write.csv(x = data, file = file.path("responses", fileName), row.names = FALSE)
+  # Grab the Google Sheet
+  sheet = gs_title(table)
+  # Add the data as a new row
+  gs_add_row(sheet, input = data)
 }
 
-# load all responses into a data.frame
 loadData = function() {
-  data = 
-    list.files(file.path("responses"), full.names = TRUE) %>%
-    lapply(function(x) read_csv(x, col_names = TRUE, col_types = cols(.default = col_guess())) ) %>%
-    bind_rows(.) 
-  data
+  # Grab the Google Sheet
+  sheet = gs_title(table)
+  # Read the data
+  gs_read_csv(sheet)
 }
 
 
@@ -70,8 +90,9 @@ shinyApp(
                h4("Submit a new rating:"),
                # Input fields
                textInput("Name", "Your Name", ""),
-               selectInput("Beer", "Which beer are you rating?",
-                           c("", beerList)),
+               textInput("Beer", "Which beer are you rating?", ""),
+               selectInput("Type", "What type of beer is this?",
+                           c("", typeList)),
                sliderInput(inputId = "Hoppiness", label = "Hoppiness", 
                            min = 0, max = 5, value = 0, step = 0.5, ticks = FALSE),
                sliderInput(inputId = "Body", label = "Body", 
@@ -99,9 +120,9 @@ shinyApp(
       column(8,
              h4("Browse the results:"),
              tabsetPanel(
-               tabPanel("by beer",
-                        selectInput(inputId = "selectBeer", label = "Select beer", choices = beerList), 
-                        plotOutput("byBeer")
+               tabPanel("by type",
+                        selectInput(inputId = "selectType", label = "Select type", choices = typeList), 
+                        plotOutput("byType")
                ), 
                tabPanel("by category",
                         selectInput(inputId = "selectCategory", label = "Select category", choices = categoryList),  
@@ -134,9 +155,10 @@ shinyApp(
     
     # Gather all the form inputs (and add timestamp)
     formData = reactive({
-      data = sapply(fieldsAll, function(x) input[[x]])
-      data = c(data, timestamp = as.integer(Sys.time()))
-      data = t(data)
+      data = t(c(input$Name, input$Beer, input$Type, input$Hoppiness, input$Body, input$Balance, input$Complexity, input$Crispiness, input$Hipsterness, input$Comment))
+      # data = sapply(fieldsAll, function(x) input[[x]])
+      # data = c(data)
+      # data = t(data)
       data
     })    
     
