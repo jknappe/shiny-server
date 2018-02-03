@@ -175,9 +175,9 @@ shinyApp(
                         selectInput(inputId = "selectBeer", label = "Select beer", choices = beerList), 
                         plotOutput("byBeer")
                         ), 
-               # tabPanel("by category",
-               #          selectInput(inputId = "selectCategory", label = "Select category", choices = categoryList),  
-               #          plotOutput("byCategory")), 
+               tabPanel("by category",
+                        selectInput(inputId = "selectCategory", label = "Select category", choices = categoryList),  
+                        plotOutput("byCategory")), 
                tabPanel("Comments", tableOutput("comments"))
              )
       )
