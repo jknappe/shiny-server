@@ -189,11 +189,7 @@ shinyApp(
      output$byBeer =
       renderPlot({
       
-        summaryData = loadData() %>%
-          mutate(Beer = factor(Beer)) %>%
-          as_tibble()
-        
-        ggplot(summaryData, aes(x = Beer, y = Hoppiness)) +
+        ggplot(as_tibble(mutate(loadData(), Beer = factor(Beer))), aes(x = Beer, y = Hoppiness)) +
           geom_bar(stat = "identity")
         
         
