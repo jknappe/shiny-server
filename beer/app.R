@@ -189,40 +189,34 @@ shinyApp(
      output$byBeer =
       renderPlot({
         
-        df <- data.frame(dose=c("D0.5", "D1", "D2"),
+        df = data.frame(dose=c("D0.5", "D1", "D2"),
                          len=c(4.2, 10, 29.5))
+        
+        summaryData = loadData() %>%
+          mutate(Beer = factor(Beer)) %>%
+          as_tibble()
         
         ggplot(data=df, aes(x=dose, y=len, group=1)) +
           geom_line()+
           geom_point()
         
-    #     summaryData =
-    #       loadData() %>%
-    #       mutate(.,
-    #              Beer = factor(Beer),
-    #              Hoppiness = as.numeric(Hoppiness),
-    #              Body = as.numeric(Body),
-    #              Balance = as.numeric(Balance),
-    #              Complexity = as.numeric(Complexity),
-    #              Crispiness = as.numeric(Crispiness),
-    #              Hipsterness = as.numeric(Hipsterness),
-    #              Comment = as.character(Comment)
-    #       )  %>%
-    #       as_tibble()
-    #     summaryData %>%
-    #       tidyr::gather(.,
-    #            key = "Category",
-    #            value = "Score",
-    #            Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
-    #     ) %>%
-    #     dplyr::filter(.,
-    #            Beer %in% input$selectBeer
-    #            ) %>%
-    #     ggplot(., aes(x = Category, y = Score)) +
-    #       geom_boxplot() +
-    #       ylim(0, 5) +
-    #       theme_minimal() +
-    #       ggtitle("Average scores for ", input$selectBeer)
+        
+
+         
+         summaryData %>%
+           tidyr::gather(.,
+                key = "Category",
+                value = "Score",
+                Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
+         ) %>%
+         dplyr::filter(.,
+                Beer %in% input$selectBeer
+                ) %>%
+         ggplot(., aes(x = Category, y = Score)) +
+           geom_boxplot() +
+           ylim(0, 5) +
+           theme_minimal() +
+           ggtitle("Average scores for ", input$selectBeer)
        })
     # ~~~~~~~~
     
