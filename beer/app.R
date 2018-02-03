@@ -258,8 +258,8 @@ shinyApp(
 
     # .output$byBeer ----
     # ~~~~~~~~
-    # output$byBeer =
-    #   renderPlot({
+     output$byBeer =
+      renderPlot({
     #     summaryData =
     #       loadData() %>%
     #       mutate(.,
@@ -287,7 +287,7 @@ shinyApp(
     #       ylim(0, 5) +
     #       theme_minimal() +
     #       ggtitle("Average scores for ", input$selectBeer)
-    #   })
+       })
     # ~~~~~~~~
       
     
