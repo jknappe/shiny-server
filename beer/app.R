@@ -8,22 +8,8 @@ library(httr)
 
 options(shiny.sanitize.errors = FALSE)
 
-file.remove('.httr-oauth')
-
-oauth2.0_token(
-  endpoint = oauth_endpoints("google"),
-  app = oauth_app(
-    "google", 
-    key = getOption("googlesheets.client_id"), 
-    secret = getOption("googlesheets.client_secret")
-  ),
-  scope = c(
-    "https://spreadsheets.google.com/feeds", 
-    "https://www.googleapis.com/auth/drive"),
-  use_oob = TRUE,
-  cache = TRUE
-)
-
+options(httr_oob_default=TRUE)
+gs_auth(new_user = TRUE)
 gs_ls()
 
 
