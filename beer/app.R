@@ -253,43 +253,43 @@ shinyApp(
     # PLOTS ----
     #~~~~~~~~~~~
 
-    # # .summary ----
-    # summaryData =
-    #   loadData() %>%
-    #   mutate(.,
-    #          Beer = factor(Beer),
-    #          Hoppiness = as.numeric(Hoppiness),
-    #          Body = as.numeric(Body),
-    #          Balance = as.numeric(Balance),
-    #          Complexity = as.numeric(Complexity),
-    #          Crispiness = as.numeric(Crispiness),
-    #          Hipsterness = as.numeric(Hipsterness),
-    #          Comment = as.character(Comment)
-    #          )  %>%
-    #   as_tibble()
-    # 
-    # # .output$byBeer ----
-    # # ~~~~~~~~
-    # output$byBeer =
-    #   renderPlot({
-    #     
-    #     summaryData %>%
-    #     gather(.,
-    #            key = "Category",
-    #            value = "Score",
-    #            Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
-    #     ) %>%
-    #     filter(.,
-    #            Beer %in% input$selectBeer
-    #            ) %>%
-    #     ggplot(., aes(x = Category, y = Score)) +
-    #       geom_boxplot() +
-    #       ylim(0, 5) +
-    #       theme_minimal() +
-    #       ggtitle("Average scores for ", input$selectBeer)
-    #     
-    #   })
-    # # ~~~~~~~~
+    # .summary ----
+    summaryData =
+      loadData() %>%
+      mutate(.,
+             Beer = factor(Beer),
+             Hoppiness = as.numeric(Hoppiness),
+             Body = as.numeric(Body),
+             Balance = as.numeric(Balance),
+             Complexity = as.numeric(Complexity),
+             Crispiness = as.numeric(Crispiness),
+             Hipsterness = as.numeric(Hipsterness),
+             Comment = as.character(Comment)
+             )  %>%
+      as_tibble()
+
+    # .output$byBeer ----
+    # ~~~~~~~~
+    output$byBeer =
+      renderPlot({
+
+        summaryData %>%
+        gather(.,
+               key = "Category",
+               value = "Score",
+               Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
+        ) %>%
+        filter(.,
+               Beer %in% input$selectBeer
+               ) %>%
+        ggplot(., aes(x = Category, y = Score)) +
+          geom_boxplot() +
+          ylim(0, 5) +
+          theme_minimal() +
+          ggtitle("Average scores for ", input$selectBeer)
+
+      })
+    # ~~~~~~~~
       
     
      
