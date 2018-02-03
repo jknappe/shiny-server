@@ -274,12 +274,12 @@ shinyApp(
           )  %>%
           as_tibble()
         summaryData %>%
-        gather(.,
+          tidyr::gather(.,
                key = "Category",
                value = "Score",
                Hoppiness, Body, Balance, Complexity, Crispiness, Hipsterness
         ) %>%
-        filter(.,
+        dplyr::filter(.,
                Beer %in% input$selectBeer
                ) %>%
         ggplot(., aes(x = Category, y = Score)) +
