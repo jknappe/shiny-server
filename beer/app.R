@@ -260,7 +260,6 @@ shinyApp(
     # ~~~~~~~~
     output$byBeer =
       renderPlot({
-        
         summaryData =
           loadData() %>%
           mutate(.,
@@ -274,7 +273,6 @@ shinyApp(
                  Comment = as.character(Comment)
           )  %>%
           as_tibble()
-
         summaryData %>%
         gather(.,
                key = "Category",
@@ -289,7 +287,6 @@ shinyApp(
           ylim(0, 5) +
           theme_minimal() +
           ggtitle("Average scores for ", input$selectBeer)
-
       })
     # ~~~~~~~~
       
