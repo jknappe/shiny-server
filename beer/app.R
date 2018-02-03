@@ -2,6 +2,7 @@
 library(shiny)
 library(ggplot2)
 library(tidyverse)
+library(magrittr)
 
 
 # which fields are mandatory
