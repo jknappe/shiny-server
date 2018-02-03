@@ -268,8 +268,8 @@ shinyApp(
           geom_line()+
           geom_point()
         
-    #     summaryData =
-    #       loadData() %>%
+         summaryData =
+           loadData() #%>%
     #       mutate(.,
     #              Beer = factor(Beer),
     #              Hoppiness = as.numeric(Hoppiness),
