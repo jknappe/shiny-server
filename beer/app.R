@@ -186,13 +186,9 @@ shinyApp(
     
     # .output$byBeer ----
     # ~~~~~~~~
-     output$byBeer =
-      renderPlot({
-      
+     output$byBeer =  renderPlot( {
         ggplot(as_tibble(mutate(loadData(), Beer = factor(Beer))), aes(x = Beer, y = Hoppiness)) +
           geom_bar(stat = "identity")
-        
-        
          # summaryData %>%
          #   tidyr::gather(.,
          #        key = "Category",
@@ -207,7 +203,8 @@ shinyApp(
          #   ylim(0, 5) +
          #   theme_minimal() +
          #   ggtitle("Average scores for ", input$selectBeer)
-       })
+        } 
+       )
     # ~~~~~~~~
     
     
