@@ -186,16 +186,16 @@ shinyApp(
     
     # .output$byBeer ----
     # ~~~~~~~~
-    # output$byBeer =
-    #  renderPlot({
-    #    
-    #    df <- data.frame(dose=c("D0.5", "D1", "D2"),
-    #                     len=c(4.2, 10, 29.5))
-    #    
-    #    ggplot(data=df, aes(x=dose, y=len, group=1)) +
-    #      geom_line()+
-    #      geom_point()
-    #    
+     output$byBeer =
+      renderPlot({
+        
+        df <- data.frame(dose=c("D0.5", "D1", "D2"),
+                         len=c(4.2, 10, 29.5))
+        
+        ggplot(data=df, aes(x=dose, y=len, group=1)) +
+          geom_line()+
+          geom_point()
+        
     #     summaryData =
     #       loadData() %>%
     #       mutate(.,
@@ -223,7 +223,7 @@ shinyApp(
     #       ylim(0, 5) +
     #       theme_minimal() +
     #       ggtitle("Average scores for ", input$selectBeer)
-    #   })
+       })
     # ~~~~~~~~
     
     
