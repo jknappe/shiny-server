@@ -65,8 +65,8 @@ shinyApp(
           HTML("&bull;"),
           span("Code on "),
           a("GitHub", href = "https://github.com/jknappe/shiny-server/")
-        )
-    ),
+          )
+     ),
     
     #DT::dataTableOutput("responsesTable"),
     
@@ -100,10 +100,10 @@ shinyApp(
                
                shinyjs::hidden(span(id = "submit_msg", "Submitting..."),
                                div(id = "error", div(br(), tags$b("Error: "), span(id = "error_msg"))))
-             ),
+              ),
              
-             shinyjs::hidden(div(id = "thankyou_msg", h3("Thanks, your response was submitted successfully!"),
-                                 actionLink("submit_another", "Submit another response")))
+            shinyjs::hidden(div(id = "thankyou_msg", h3("Thanks, your response was submitted successfully!"),
+                            actionLink("submit_another", "Submit another response")))
       ),
       
       # second column
@@ -113,7 +113,7 @@ shinyApp(
                tabPanel("by beer",
                         selectInput(inputId = "selectBeer", label = "Select beer", choices = beerList), 
                         plotOutput("byBeer")
-               ), 
+                        ), 
                tabPanel("by category",
                         selectInput(inputId = "selectCategory", label = "Select category", choices = categoryList),  
                         plotOutput("byCategory")), 
@@ -191,24 +191,24 @@ shinyApp(
     
     # PLOTS ----
     #~~~~~~~~~~~
-    
+
     # .summary ----
     
-    
+
     # .output$byBeer ----
     # ~~~~~~~~
-    # output$byBeer =
-    #  renderPlot({
-    #    
-    #    df <- data.frame(dose=c("D0.5", "D1", "D2"),
-    #                     len=c(4.2, 10, 29.5))
-    #    
-    #    ggplot(data=df, aes(x=dose, y=len, group=1)) +
-    #      geom_line()+
-    #      geom_point()
-    #    
-    #     summaryData =
-    #       loadData() %>%
+     # output$byBeer =
+     #  renderPlot({
+     #    
+     #    df <- data.frame(dose=c("D0.5", "D1", "D2"),
+     #                     len=c(4.2, 10, 29.5))
+     #    
+     #    ggplot(data=df, aes(x=dose, y=len, group=1)) +
+     #      geom_line()+
+     #      geom_point()
+     #    
+     #     summaryData =
+     #       loadData() %>%
     #       mutate(.,
     #              Beer = factor(Beer),
     #              Hoppiness = as.numeric(Hoppiness),
@@ -236,9 +236,9 @@ shinyApp(
     #       ggtitle("Average scores for ", input$selectBeer)
     #   })
     # ~~~~~~~~
+      
     
-    
-    
+     
     # # .output$byCategory ----
     # # ~~~~~~~~
     # output$byCategory =
