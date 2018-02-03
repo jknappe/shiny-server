@@ -4,8 +4,27 @@ library(ggplot2)
 library(tidyverse)
 library(magrittr)
 library(googlesheets)
+library(httr)
 
 options(shiny.sanitize.errors = FALSE)
+
+file.remove('.httr-oauth')
+
+oauth2.0_token(
+  endpoint = oauth_endpoints("google"),
+  app = oauth_app(
+    "google", 
+    key = getOption("googlesheets.client_id"), 
+    secret = getOption("googlesheets.client_secret")
+  ),
+  scope = c(
+    "https://spreadsheets.google.com/feeds", 
+    "https://www.googleapis.com/auth/drive"),
+  use_oob = TRUE,
+  cache = TRUE
+)
+
+gs_ls()
 
 
 # create list of available categories
