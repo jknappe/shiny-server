@@ -255,7 +255,7 @@ shinyApp(
 
     # .summary ----
     summaryData =
-       loadData() %>%
+       loadData() #%>%
     #   mutate(.,
     #          Beer = factor(Beer),
     #          Hoppiness = as.numeric(Hoppiness),
