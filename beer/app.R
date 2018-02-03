@@ -196,13 +196,7 @@ shinyApp(
           mutate(Beer = factor(Beer)) %>%
           as_tibble()
         
-        ggplot(data=df, aes(x=dose, y=len, group=1)) +
-          geom_line()+
-          geom_point()
         
-        
-
-         
          summaryData %>%
            tidyr::gather(.,
                 key = "Category",
