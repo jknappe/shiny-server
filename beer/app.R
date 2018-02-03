@@ -292,7 +292,7 @@ shinyApp(
     # ~~~~~~~~
       
     
-    
+     
     # # .output$byCategory ----
     # # ~~~~~~~~
     # output$byCategory =
