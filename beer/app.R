@@ -73,8 +73,8 @@ saveData <- function(data) {
 loadData <- function() {
   files <- list.files(file.path(responsesDir), full.names = TRUE)
   data <- lapply(files, read.csv, stringsAsFactors = FALSE)
-  data <- dplyr::bind_rows(data)
-  #data <- do.call(rbind, data)
+  #data <- dplyr::bind_rows(data)
+  data <- do.call(rbind, data)
   data
 }
 
