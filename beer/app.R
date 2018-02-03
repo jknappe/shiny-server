@@ -53,22 +53,11 @@ shinyApp(
     
     
     div(id = "header",
-        h4("This app is powered by ",
-           a(href = "https://shiny.rstudio.com",
-             "Shiny")
-        ),
         strong( 
-          span("Created by "),
-          a("Jan Knappe", href = "http://www.janknappe.com"),
-          span("inspired by a blog post by"),
-          a("Dean Attali", href = "http://deanattali.com"),
-          HTML("&bull;"),
           span("Code on "),
           a("GitHub", href = "https://github.com/jknappe/shiny-server/")
         )
     ),
-    
-    #DT::dataTableOutput("responsesTable"),
     
     # fluid row, columns should add to 12
     fluidRow(
