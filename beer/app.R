@@ -253,9 +253,9 @@ shinyApp(
     # PLOTS ----
     #~~~~~~~~~~~
 
-    # # .summary ----
-    # summaryData =
-    #   loadData() %>%
+    # .summary ----
+    summaryData =
+       loadData() %>%
     #   mutate(.,
     #          Beer = factor(Beer),
     #          Hoppiness = as.numeric(Hoppiness),
